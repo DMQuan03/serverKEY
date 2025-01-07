@@ -1,14 +1,14 @@
 const express = require("express")
 const app = express()
 const PORT = 5678
-const cors = require("cors")
+// const cors = require("cors")
 const dotenv = require("dotenv")
 dotenv.config()
-app.use(cors({
-    origin: "*",
-    credentials: true,
-    optionsSuccessStatus: 200
-}))
+// app.use(cors({
+//     origin: "*",
+//     credentials: true,
+//     optionsSuccessStatus: 200
+// }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 

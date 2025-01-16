@@ -42,7 +42,7 @@ app.post('/upload-from-url', async (req, res) => {
 
     // const fileName = `video_${Date.now()}.mp4`; // Tạo tên file
     const fileName = `quan_${name}.mp4`; // Tạo tên file
-    const filePath = path.join(__dirname, 'uploads', fileName); // Đường dẫn lưu video
+    const filePath = path.join(__dirname, 'config', fileName); // Đường dẫn lưu video
 
     try {
         // Tải video và lưu vào thư mục uploads
@@ -74,7 +74,7 @@ app.post('/upload-from-url', async (req, res) => {
 // Route để xem video
 app.get('/videos/:videoName', (req, res) => {
     const videoName = req.params.videoName;
-    const videoPath = path.join(__dirname, 'uploads', videoName);
+    const videoPath = path.join(__dirname, 'config', videoName);
 
     // Kiểm tra nếu file video tồn tại
     fs.exists(videoPath, (exists) => {

@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 // Kết nối MongoDB
-mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://duongminhquan3005:Satthu123@cluster0.x9xrb0i.mongodb.net/shoptreem", {
+mongoose.connect("mongodb+srv://duongminhquan3005:Satthu123@cluster0.x9xrb0i.mongodb.net/shoptreem", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => console.log("✅ MongoDB connected"))

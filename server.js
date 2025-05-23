@@ -1,6 +1,7 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
+const axios = require('axios');
+const querystring = require('querystring');
 require("dotenv").config();
 
 const app = express();
@@ -10,133 +11,79 @@ const PORT = process.env.PORT || 5555;  // Use environment variable for port
 app.use(cors());
 app.use(express.json());
 
-// Kết nối MongoDB
-mongoose.connect("mongodb+srv://duongminhquan3005:Satthu123@cluster0.x9xrb0i.mongodb.net/shoptreem", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}).then(() => console.log("✅ MongoDB connected"))
-    .catch(err => console.error("❌ MongoDB connection error:", err));
 
-// Cập nhật Schema để thêm màu sắc
-const productSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    price: { type: Number, required: true },
-    image: { type: String, required: true },
-    category: { type: Number, required: true },
-    color: { type: String, enum: ['white', 'yellow', 'blue', 'pink', 'black'], required: true },
-    description: { type: String, required: true },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    }
-});
+const DID = "7506797301241120274";
+let VIDEO = "7477537590149713170";
 
-const Product = mongoose.model("products", productSchema);
-
-// GET /products?page=1&limit=10&category=girl&search=áo&colors=white,pink&sort=price_asc
-app.get("/products", async (req, res, next) => {
+async function view(video) {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 6;
-        const category = req.query.category;
-        const search = req.query.search || "";
-        const colors = req.query.colors ? req.query.colors.split(',') : [];
-        const sort = req.query.sort || 'price_asc';  // Mặc định sắp xếp theo giá tăng dần
+        const version = [247, 312, 322, 357, 358, 415, 422, 444, 466][Math.floor(Math.random() * 9)];
+        const device = ["SM-G9900", "sm-g950f", "SM-A136U1", "SM-M225FV", "SM-E426B", "SM-M526BR", "SM-M326B", "SM-A528B", "SM-F711B", "SM-F926B", "SM-A037G", "SM-A225F", "SM-M325FV", "SM-A226B", "SM-M426B", "SM-A525F"][Math.floor(Math.random() * 16)];
+        const host = ["api16.tiktokv.com", "api.tiktokv.com", "api19.tiktokv.com", "api21.tiktokv.com"][Math.floor(Math.random() * 4)];
 
-        // Xử lý tham số sort
-        let sortOptions = {};
-        if (sort === 'desc') {
-            sortOptions = { price: -1 };  // Sắp xếp giảm dần theo giá
-        } else if (sort === 'asc') {
-            sortOptions = { price: 1 };  // Sắp xếp tăng dần theo giá
-        } else {
-            sortOptions = { createdAt: -1 };  // Mặc định sắp xếp theo ngày tạo nếu không có sort rõ ràng
-        }
-
-        // Tạo filter cho tìm kiếm tên và lọc theo màu sắc
-        const filter = {
-            name: { $regex: search, $options: 'i' },  // Tìm kiếm tên sản phẩm
-            ...(category && { category }),  // Lọc theo category nếu có
-            ...(colors.length > 0 && { color: { $in: colors } })  // Lọc theo màu sắc nếu có
-        };
-
-        // Tìm các sản phẩm theo filter và sắp xếp
-        const products = await Product.find(filter)
-            .skip((page - 1) * limit)
-            .limit(limit)
-            .sort(sortOptions);  // Sắp xếp theo các lựa chọn sort
-
-        const total = await Product.countDocuments(filter);
-
-        return res.status(200).json({
-            s: true,
-            e: 0,
-            c: 200,
-            m: '',
-            d: {
-                total,
-                page,
-                limit,
-                products
-            }
+        const params = querystring.stringify({
+            app_language: "fr",
+            iid: "",
+            device_id: DID,
+            channel: "googleplay",
+            device_type: device,
+            ac: "wifi",
+            os_version: Math.floor(Math.random() * (11 - 5 + 1)) + 5, // Random từ 5-11
+            version_code: version,
+            app_name: "trill",
+            device_brand: "samsung",
+            ssmix: "a",
+            device_platform: "android",
+            aid: 1180,
+            as: "a1iosdfgh", // creds to @auut for params bypass
+            cp: "androide1",
         });
+
+        const data = `&manifest_version_code=${version}&update_version_code=${version}0&play_delta=1&item_id=${video}&version_code=${version}&aweme_type=0`;
+
+        const response = await axios.post(
+            `https://api21.tiktokv.com/aweme/v1/aweme/stats?app_language=fr&iid=&device_id=7506797301241120274&channel=googleplay&device_type=SM-F711B&ac=wifi&os_version=7&version_code=357&app_name=trill&device_brand=samsung&ssmix=a&device_platform=android&aid=1180&as=a1iosdfgh&cp=androide1`,
+            data,
+            {
+                headers: {
+                    "host": "api21.tiktokv.com",
+                    "connection": "keep-alive",
+                    "accept-encoding": "gzip",
+                    "x-ss-req-ticket": Math.floor(Date.now() / 1000).toString(),
+                    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                    "user-agent": `com.ss.android.ugc.trill/${version} (Linux; U; Android 11; fr_FR; ${device}; Build/RP1A.200720.012; Cronet/58.0.2991.0)`
+                },
+            }
+        );
+
+        const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false });
+        console.log(
+            `${`[${timestamp}]`} ` +
+            `${'[VIEW]'} ` +
+            `${`==> send +1 view to ${VIDEO}`}`
+        );
     } catch (error) {
-        next(error);
+        console.log(error)
+        // Bỏ qua lỗi, tương tự Python
     }
-});
+}
 
-// POST /products
-app.post("/products", async (req, res, next) => {
-    try {
-        const { name, price, image, category, description, color } = req.body;
+function startViewing() {
+    let activeRequests = 0;
+    const maxConcurrent = 300; // Giới hạn số yêu cầu đồng thời
 
-        // Kiểm tra nếu thiếu thông tin cần thiết
-        if (!name || !price || !image || !category || !description || !color) {
-            return res.status(400).json({
-                s: false,
-                e: 2,
-                c: 400,
-                m: 'Missing required fields',
-                d: null
+    setInterval(() => {
+        if (activeRequests < maxConcurrent) {
+            activeRequests++;
+            view(VIDEO).finally(() => {
+                activeRequests--;
             });
         }
+    }, 10); // Gửi yêu cầu mới mỗi 10ms nếu chưa đạt giới hạn
+}
 
-        // Tạo một sản phẩm mới
-        const newProduct = new Product({
-            name,
-            price,
-            image,
-            category,
-            description,
-            color
-        });
-
-        // Lưu sản phẩm vào cơ sở dữ liệu
-        await newProduct.save();
-
-        return res.status(201).json({
-            s: true,
-            e: 0,
-            c: 201,
-            m: 'Product added successfully',
-            d: newProduct
-        });
-    } catch (error) {
-        next(error);
-    }
-});
-
-// Error handler
-app.use((err, req, res, next) => {
-    console.error("❌ Error:", err.message);
-    res.status(500).json({
-        s: false,
-        e: 1,
-        c: 500,
-        m: err.message,
-        d: null
-    });
-});
+// Yêu cầu người dùng nhập VIDEO ID
+startViewing();
 
 // Khởi động server
 app.listen(PORT, () => {

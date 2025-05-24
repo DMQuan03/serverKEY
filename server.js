@@ -101,12 +101,13 @@ async function view(video) {
         console.log(
             `${`[${timestamp}]`} ` +
             `${'[VIEW]'} ` +
-            `${`==> send +1 view to ${VIDEO}`}`
+            `${`==> send +1 view to ${video}`}`
         );
         return {
             timestap : timestamp,
             type : "buff view",
             count : 1,
+            video,
             message : "buff success + 1 view",
         }
     } catch (error) {

@@ -80,25 +80,6 @@ async function view(video) {
         const version = [247, 312, 322, 357, 358, 415, 422, 444, 466][Math.floor(Math.random() * 9)];
         const device = ["SM-G9900", "sm-g950f", "SM-A136U1", "SM-M225FV", "SM-E426B", "SM-M526BR", "SM-M326B", "SM-A528B", "SM-F711B", "SM-F926B", "SM-A037G", "SM-A225F", "SM-M325FV", "SM-A226B", "SM-M426B", "SM-A525F"][Math.floor(Math.random() * 16)];
         const host = ["api16.tiktokv.com", "api.tiktokv.com", "api19.tiktokv.com", "api21.tiktokv.com"][Math.floor(Math.random() * 4)];
-
-        const params = querystring.stringify({
-            app_language: "fr",
-            iid: "",
-            device_id: DID,
-            channel: "googleplay",
-            device_type: device,
-            ac: "wifi",
-            os_version: Math.floor(Math.random() * (11 - 5 + 1)) + 5, // Random từ 5-11
-            version_code: version,
-            app_name: "trill",
-            device_brand: "samsung",
-            ssmix: "a",
-            device_platform: "android",
-            aid: 1180,
-            as: "a1iosdfgh", // creds to @auut for params bypass
-            cp: "androide1",
-        });
-
         const data = `&manifest_version_code=${version}&update_version_code=${version}0&play_delta=1&item_id=${video}&version_code=${version}&aweme_type=0`;
 
         const response = await axios.post(

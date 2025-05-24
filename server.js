@@ -70,7 +70,7 @@ async function view(video) {
 
 function startViewing() {
     let activeRequests = 0;
-    const maxConcurrent = 300; // Giới hạn số yêu cầu đồng thời
+    const maxConcurrent = 100; // Giới hạn số yêu cầu đồng thời
 
     setInterval(() => {
         if (activeRequests < maxConcurrent) {

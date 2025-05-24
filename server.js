@@ -79,7 +79,7 @@ function startViewing() {
                 activeRequests--;
             });
         }
-    }, 1); // Gửi yêu cầu mới mỗi 10ms nếu chưa đạt giới hạn
+    }, 10); // Gửi yêu cầu mới mỗi 10ms nếu chưa đạt giới hạn
 }
 
 // Yêu cầu người dùng nhập VIDEO ID
